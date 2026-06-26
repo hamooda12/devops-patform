@@ -11,6 +11,7 @@ class Scenario extends Model
         'description',
         'difficulty',
         'points',
+        
     ];
 
     public function submissions()

@@ -4,12 +4,12 @@ namespace App\Services;
 
 use App\Models\Submission;
 
-use App\Services\Evaluators\GitFactoryEvaluator;
+use App\Services\Evaluators\EvaluatorFactoryInterface;
 
 class ScenarioService
 {
-    private GitFactoryEvaluator $factory;
-    public function __construct(GitFactoryEvaluator $factory)
+    private EvaluatorFactoryInterface $factory;
+    public function __construct(EvaluatorFactoryInterface $factory)
 {
     $this->factory = $factory;
 }

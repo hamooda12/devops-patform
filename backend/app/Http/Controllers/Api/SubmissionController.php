@@ -15,14 +15,16 @@ class SubmissionController extends Controller
         'user_id' => 'required|integer',
         'scenario_id' => 'required|exists:scenarios,id',
         'command_output' => 'required|string',
+       
     ]);
-
+$scenario = Scenario::findOrFail($validated['scenario_id']);
     $submission = Submission::create([
         'user_id' => $validated['user_id'],
         'scenario_id' => $validated['scenario_id'],
         'command_output' => $validated['command_output'],
         'score' => 0,
         'status' => 'pending',
+        'type' => $scenario->type, 
     ]);
 
     $submission = $scenarioService->evaluateSubmission($submission);
