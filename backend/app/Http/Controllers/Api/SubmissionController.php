@@ -1,41 +1,43 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Scenario;
 use App\Models\Submission;
-use App\Services\ScenarioService;
 use Illuminate\Http\Request;
-use App\Http\Resources\SubmissionResource;
+
 class SubmissionController extends Controller
 {
-    public function store(Request $request, ScenarioService $scenarioService)
-{
-    
-    $validated = $request->validate([
-  
-        'scenario_id' => 'required|exists:scenarios,id',
-        'command_output' => 'required|string',
-       
-    ]);
-$scenario = Scenario::findOrFail($validated['scenario_id']);
-$user = $request->user();
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'scenario_id' => 'required|exists:scenarios,id',
+            'command_output' => 'required|string',
+        ]);
 
-    $submission = Submission::create([
-        'user_id' => $user->id,
-        'scenario_id' => $validated['scenario_id'],
-        'command_output' => $validated['command_output'],
-        'score' => 0,
-        'status' => 'pending',
-        'type' => $scenario->type, 
-    ]);
+        $submission = Submission::create([
+            'user_id' => $request->user()->id,
+            'scenario_id' => $data['scenario_id'],
+            'command_output' => $data['command_output'],
+            'score' => 0,
+            'status' => 'pending',
+        ]);
 
-    $submission = $scenarioService->evaluateSubmission($submission);
+        return response()->json([
+            'message' => 'Submission created successfully',
+            'data' => $submission,
+        ], 201);
+    }
 
-    return response()->json([
-         'message' => 'Submission evaluated successfully',
-    'data' => new SubmissionResource($submission),
-    ]);
-}
+    public function show(Request $request, Submission $submission)
+    {
+        if ($submission->user_id !== $request->user()->id) {
+            return response()->json([
+                'message' => 'Forbidden',
+            ], 403);
+        }
+
+        return response()->json([
+            'data' => $submission,
+        ]);
+    }
 }

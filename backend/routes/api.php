@@ -10,12 +10,14 @@ Route::get('/scenarios/{scenario}', [ScenarioController::class, 'show']);
 
 
 
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/submissions', [SubmissionController::class, 'store']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
-});
 
+    Route::post('/submissions', [SubmissionController::class, 'store']);
+    Route::get('/submissions/{submission}', [SubmissionController::class, 'show']);
+});
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
