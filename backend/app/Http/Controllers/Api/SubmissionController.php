@@ -5,9 +5,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Submission;
 use App\Services\ScenarioService;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SubmissionController extends Controller
 {
+    use AuthorizesRequests;
     private ScenarioService $scenarioService;
 
     public function __construct(ScenarioService $scenarioService)
@@ -38,18 +40,14 @@ class SubmissionController extends Controller
         ], 201);
     }
 
-    public function show(Request $request, Submission $submission)
-    {
-        if ($submission->user_id !== $request->user()->id) {
-            return response()->json([
-                'message' => 'Forbidden',
-            ], 403);
-        }
+public function show(Submission $submission)
+{
+    $this->authorize('view', $submission);
 
-        return response()->json([
-            'data' => $submission->load('scenario'),
-        ]);
-    }
+    return response()->json([
+        'data' => $submission->load('scenario')
+    ]);
+}
 
     public function mySubmissions(Request $request)
     {
