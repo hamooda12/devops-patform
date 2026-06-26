@@ -4,7 +4,7 @@ namespace App\Services\Evaluators;
 
 use App\Models\Scenario;
 use App\Models\Submission;
-use App\Services\Evaluators\gitEvaluator;
+use App\Services\Evaluators\Git\gitEvaluator;
 use App\Services\Evaluators\EvaluatorFactoryInterface;
 
 class EvaluatorFactory implements EvaluatorFactoryInterface

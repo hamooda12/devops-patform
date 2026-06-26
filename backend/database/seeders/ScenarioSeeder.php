@@ -18,5 +18,14 @@ class ScenarioSeeder extends Seeder
                 'type' => 'git',
             ]
         );
+        Scenario::updateOrCreate(
+            ['slug' => 'git-branch-create'],
+            [
+                'title' => 'Create Git Branch',
+                'description' => 'Create a new git branch and switch to it.',
+                'difficulty' => 'easy',
+                'type' => 'git',
+            ]
+        );
     }
 }
