@@ -7,6 +7,7 @@ use App\Models\Scenario;
 use App\Models\Submission;
 use App\Services\ScenarioService;
 use Illuminate\Http\Request;
+use App\Http\Resources\SubmissionResource;
 class SubmissionController extends Controller
 {
     public function store(Request $request, ScenarioService $scenarioService)
@@ -30,9 +31,8 @@ $scenario = Scenario::findOrFail($validated['scenario_id']);
     $submission = $scenarioService->evaluateSubmission($submission);
 
     return response()->json([
-        'message' => 'Submission evaluated successfully',
-        'feedback' => $submission->feedback,
-        'data' => $submission,
+         'message' => 'Submission evaluated successfully',
+    'data' => new SubmissionResource($submission),
     ]);
 }
 }

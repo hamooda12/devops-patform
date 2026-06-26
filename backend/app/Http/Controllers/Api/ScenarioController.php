@@ -4,20 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Scenario;
-
+use App\Http\Resources\ScenarioResource;
 class ScenarioController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'data' => Scenario::latest()->get()
-        ]);
+        return  ScenarioResource::collection(Scenario::all());
     }
 
     public function show(Scenario $scenario)
     {
-        return response()->json([
-            'data' => $scenario
-        ]);
+        return new ScenarioResource($scenario);
     }
 }
