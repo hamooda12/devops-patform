@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Submission;
+use App\Services\ScenarioService;
 use Illuminate\Http\Request;
 
 class SubmissionController extends Controller
 {
+    private ScenarioService $scenarioService;
+
+    public function __construct(ScenarioService $scenarioService)
+    {
+        $this->scenarioService = $scenarioService;
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -22,8 +30,10 @@ class SubmissionController extends Controller
             'status' => 'pending',
         ]);
 
+        $submission = $this->scenarioService->evaluateSubmission($submission);
+
         return response()->json([
-            'message' => 'Submission created successfully',
+            'message' => 'Submission evaluated successfully',
             'data' => $submission,
         ], 201);
     }
@@ -37,7 +47,19 @@ class SubmissionController extends Controller
         }
 
         return response()->json([
-            'data' => $submission,
+            'data' => $submission->load('scenario'),
+        ]);
+    }
+
+    public function mySubmissions(Request $request)
+    {
+        $submissions = Submission::with('scenario')
+            ->where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'data' => $submissions,
         ]);
     }
 }

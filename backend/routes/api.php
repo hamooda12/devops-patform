@@ -12,13 +12,14 @@ Route::get('/scenarios/{scenario}', [ScenarioController::class, 'show']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', [AuthController::class, 'me']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/scenarios', [ScenarioController::class, 'index']);
+    Route::get('/scenarios/{scenario}', [ScenarioController::class, 'show']);
 
     Route::post('/submissions', [SubmissionController::class, 'store']);
-    Route::get('/submissions/{submission}', [SubmissionController::class, 'show']);
-});
+    Route::get('/my-submissions', [SubmissionController::class, 'mySubmissions']);
 
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
