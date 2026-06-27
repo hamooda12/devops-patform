@@ -18,5 +18,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/submissions/{submission}', [SubmissionController::class, 'show']);
     Route::get('/my-submissions', [SubmissionController::class, 'mySubmissions']);
 
+    Route::post('/scenarios', [ScenarioController::class, 'store']);
+Route::put('/scenarios/{scenario}', [ScenarioController::class, 'update']);
+Route::delete('/scenarios/{scenario}', [ScenarioController::class, 'destroy']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });

@@ -12,6 +12,7 @@ public function evaluate(Scenario $scenario, Submission $submission): array
         return match ($scenario->slug) {
             'git-init' => (new GitInitEvaluator())->evaluate($scenario, $submission),
             'git-branch-create' => (new GitBranchEvaluator())->evaluate($scenario, $submission),
+            'git-merge-branch' => (new GitMergeEvaluator())->evaluate($scenario, $submission),
             default => throw new \Exception('No evaluator found for this scenario'),
         };
     }
