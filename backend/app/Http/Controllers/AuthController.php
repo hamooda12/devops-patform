@@ -23,12 +23,12 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        $token = $user->createToken('api-token')->plainTextToken;
+       
 
         return response()->json([
             'message' => 'Registered successfully',
             'user' => $user,
-            'token' => $token,
+          
         ], 201);
     }
 
