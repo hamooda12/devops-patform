@@ -6,7 +6,7 @@ use App\Models\Submission;
 use App\Services\ScenarioService;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
+use App\Http\Resources\SubmissionResource;
 class SubmissionController extends Controller
 {
     use AuthorizesRequests;
