@@ -25,5 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
          Gate::policy(Submission::class, SubmissionPolicy::class);
+         Gate::define('viewAdminDashboard', function ($user) {
+    return $user->role === 'admin';
+});
     }
 }
