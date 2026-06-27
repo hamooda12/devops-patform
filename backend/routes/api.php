@@ -7,7 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\UserProgressController;
-
+use App\Http\Controllers\Api\AdminUserController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -33,8 +33,11 @@ Route::middleware(['auth:sanctum', 'can:viewAdminDashboard'])
     ->group(function () {
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index']);
-
+Route::get('/users/{user}/progress', [UserProgressController::class, 'userProgress']);
         Route::post('/scenarios', [ScenarioController::class, 'store']);
         Route::put('/scenarios/{scenario}', [ScenarioController::class, 'update']);
         Route::delete('/scenarios/{scenario}', [ScenarioController::class, 'destroy']);
-    });
+    Route::get('/users', [AdminUserController::class, 'index']);
+Route::get('/users/{user}', [AdminUserController::class, 'show']);
+Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole']);
+        });
