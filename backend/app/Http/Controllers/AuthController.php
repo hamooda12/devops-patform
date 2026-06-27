@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\Scenario;
+use App\Http\Resources\UserResource;
 class AuthController extends Controller
 {
     public function register(Request $request)
@@ -25,11 +26,10 @@ class AuthController extends Controller
 
        
 
-        return response()->json([
-            'message' => 'Registered successfully',
-            'user' => $user,
-          
-        ], 201);
+       return response()->json([
+    'message' => 'Registered successfully',
+    'user' => new UserResource($user),
+], 201);
     }
 
     public function login(Request $request)
@@ -49,16 +49,16 @@ class AuthController extends Controller
 
         $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json([
-            'message' => 'Logged in successfully',
-            'user' => $user,
-            'token' => $token,
-        ]);
+      return response()->json([
+    'message' => 'Logged in successfully',
+    'user' => new UserResource($user),
+    'token' => $token,
+]);
     }
 
     public function me(Request $request)
     {
-        return response()->json($request->user());
+      return new UserResource($request->user());
     }
    
     public function logout(Request $request)

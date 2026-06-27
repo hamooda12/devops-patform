@@ -36,7 +36,7 @@ class SubmissionController extends Controller
 
         return response()->json([
             'message' => 'Submission evaluated successfully',
-            'data' => $submission,
+            'data' => new SubmissionResource($submission->load('scenario')),
         ], 201);
     }
 
@@ -45,7 +45,7 @@ public function show(Submission $submission)
     $this->authorize('view', $submission);
 
     return response()->json([
-        'data' => $submission->load('scenario')
+        'data' => new SubmissionResource($submission->load('scenario')),
     ]);
 }
 
@@ -57,7 +57,7 @@ public function show(Submission $submission)
             ->get();
 
         return response()->json([
-            'data' => $submissions,
+            'data' => SubmissionResource::collection($submissions),
         ]);
     }
 }

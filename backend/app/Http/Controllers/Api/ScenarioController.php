@@ -38,7 +38,7 @@ public function store(Request $request)
 
     return response()->json([
         'message' => 'Scenario created successfully',
-        'data' => $scenario,
+        'data' =>  new ScenarioResource($scenario),
     ], 201);
 }
 
@@ -59,7 +59,7 @@ public function update(Request $request, Scenario $scenario)
 
     return response()->json([
         'message' => 'Scenario updated successfully',
-        'data' => $scenario,
+        'data' =>  new ScenarioResource($scenario),
     ]);
 }
 

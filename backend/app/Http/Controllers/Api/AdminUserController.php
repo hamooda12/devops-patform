@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Services\UserProgressService;
 use Illuminate\Http\Request;
 use App\Filters\UserFilter;
-
+use App\Http\Resources\UserResource;
 class AdminUserController extends Controller
 {
     public function __construct(
@@ -20,19 +20,12 @@ class AdminUserController extends Controller
         ->apply(User::query(), $request)
         ->paginate($request->get('per_page', 10));
 
-    return response()->json([
-        'data' => $users,
-    ]);
+   return UserResource::collection($users);
 }
 
     public function show(User $user)
     {
-        return response()->json([
-            'data' => [
-                'user' => $user,
-                'progress' => $this->userProgressService->getProgress($user)
-            ]
-        ]);
+       return new UserResource($user);
     }
     public function updateRole(Request $request, User $user)
 {
@@ -51,7 +44,7 @@ class AdminUserController extends Controller
 
     return response()->json([
         'message' => 'Role updated successfully',
-        'data' => $user,
+      'data' => new UserResource($user),
     ]);
 }
     

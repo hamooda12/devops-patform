@@ -9,7 +9,15 @@ class UserFilter
 {
     public function apply(Builder $query, Request $request): Builder
     {
-        // Search
+        $this->search($query, $request);
+        $this->role($query, $request);
+        $this->sort($query, $request);
+
+        return $query;
+    }
+
+    private function search(Builder $query, Request $request): void
+    {
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -18,26 +26,21 @@ class UserFilter
                   ->orWhere('email', 'like', "%{$search}%");
             });
         }
+    }
 
-        // Role Filter
+    private function role(Builder $query, Request $request): void
+    {
         if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
+    }
 
-        // Sort
-        switch ($request->get('sort')) {
-            case 'name':
-                $query->orderBy('name');
-                break;
-
-            case 'oldest':
-                $query->oldest();
-                break;
-
-            default:
-                $query->latest();
-        }
-
-        return $query;
+    private function sort(Builder $query, Request $request): void
+    {
+        match ($request->get('sort')) {
+            'name' => $query->orderBy('name'),
+            'oldest' => $query->oldest(),
+            default => $query->latest(),
+        };
     }
 }
