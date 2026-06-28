@@ -8,6 +8,9 @@ use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\UserProgressController;
 use App\Http\Controllers\Api\AdminUserController;
+use App\Services\Docker\DockerRunnerInterface;
+use Illuminate\Http\Request;
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -28,6 +31,39 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/leaderboard', [LeaderboardController::class, 'index']);
 });
 
+
+Route::post('/terminal/test', function (Request $request, DockerRunnerService $runner) {
+    $data = $request->validate([
+        'commands' => 'required|string',
+    ]);
+
+    return response()->json(
+        $runner->run($data['commands'])
+    );
+});
+
+
+Route::post('/terminal/test', function (Request $request, DockerRunnerInterface $runner) {
+    $data = $request->validate([
+        'commands' => 'required|string',
+    ]);
+
+    $containerName = $runner->createContainer();
+
+    try {
+        $userResult = $runner->exec($containerName, $data['commands']);
+
+        $checkResult = $runner->exec($containerName, 'git status');
+
+        return response()->json([
+            'container' => $containerName,
+            'user_result' => $userResult,
+            'check_result' => $checkResult,
+        ]);
+    } finally {
+        $runner->removeContainer($containerName);
+    }
+});
 Route::middleware(['auth:sanctum', 'can:viewAdminDashboard'])
     ->prefix('admin')
     ->group(function () {
@@ -40,4 +76,6 @@ Route::get('/users/{user}/progress', [UserProgressController::class, 'userProgre
     Route::get('/users', [AdminUserController::class, 'index']);
 Route::get('/users/{user}', [AdminUserController::class, 'show']);
 Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole']);
-        });
+   
+
+});
