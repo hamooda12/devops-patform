@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ScenarioController;
 use App\Http\Controllers\Api\SubmissionController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Api\TerminalSessionController;
 use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\UserProgressController;
@@ -15,7 +16,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-
+ Route::post('/terminal/start', [TerminalSessionController::class, 'start']);
+    Route::post('/terminal/execute', [TerminalSessionController::class, 'execute']);
+    Route::post('/terminal/stop', [TerminalSessionController::class, 'stop']);
+   Route::post('/terminal/submit', [TerminalSessionController::class, 'submit']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
